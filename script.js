@@ -8,7 +8,7 @@ let paginaAtual = 0;
 const limitePorPagina = 10;
 
 // Configuração da festa
-const dataFesta = new Date("2025-03-24T19:30:00");
+const dataFesta = new Date("2025-03-24T22:30:00");
 const duracaoHoras = 2;
 const fimFesta = new Date(dataFesta.getTime() + duracaoHoras * 60 * 60 * 1000);
 
