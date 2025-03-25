@@ -1,10 +1,10 @@
-:root {
-    --cor-fundo: #005eb8;
-    --cor-primaria: #ffffff;
+    :root {
+    --cor-fundo: #ffffff;
+    --cor-primaria: #139113;
     --cor-secundaria: #ffcc00;
     --cor-vermelha: #d62828;
     --cor-texto: #ffffff;
-    --fonte-principal: 'Comic Neue', cursive;
+    --fonte-principal: 'Comic Sans MS', cursive, sans-serif;
   }
   
   * {
@@ -14,7 +14,7 @@
   }
   
   body {
-    background-color: var(--cor-fundo);
+    background: url('/assets/divertidamente.png') no-repeat center top;
     font-family: var(--fonte-principal);
     color: var(--cor-texto);
     text-align: center;
@@ -22,7 +22,7 @@
   }
   
   header.convite-header {
-    background: url('https://i.imgur.com/dsc3l5W.png') no-repeat center top;
+    
     background-size: cover;
     padding: 100px 20px 40px 20px;
     border-radius: 15px;
@@ -280,4 +280,15 @@
   .galeria img:hover {
     transform: scale(1.05);
   }
-  
+
+      /* Fundo sólido apenas para o mural */
+#pagina-mural {
+    background-color: var(--cor-fundo);
+  }
+
+
+
+#pagina-convite .botoes {
+  margin-top: 70vh;
+  margin-bottom: 60px;
+}
