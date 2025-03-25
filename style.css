@@ -14,7 +14,7 @@
   }
   
   body {
-    background: url('./assets/divertidamente.png') no-repeat center top;
+    background: url('/divertidamente.png') no-repeat center top;
     font-family: var(--fonte-principal);
     color: var(--cor-texto);
     text-align: center;
