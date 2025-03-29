@@ -1,82 +1,84 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Convite do Bernardo</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/novo_codigo/css/style.css" />
 </head>
-<style>
-
-  
-</style>
 <body>
+  <!-- Página do Convite -->
   <div id="pagina-convite" class="pagina ativa">
-    <section>
-        
-    </section>
-    <section class="botoes">
-      <button onclick="abrirMapa()">📍 Como Chegar</button>
-      <button onclick="abrirModalConfirmacao()">✅ Confirmar Presença</button>
-      <button onclick="verPresentes()">🎁 Sugestão de Presente</button>
-    </section>
+    <div class="pelicula-botoes">
+      <section class="botoes">
+        <button onclick="abrirMapa()">📍 Como Chegar</button>
+        <button onclick="abrirModalConfirmacao()">✅ Confirmar Presença</button>
+        <button onclick="verPresentes()">🎁 Sugestão de Presente</button>
+      </section>
+    </div>
   </div>
 
+  <!-- Página do Mural -->
   <div id="pagina-mural" class="pagina">
     <section class="mural">
       <h2>Mural de Fotos</h2>
       <label class="upload-label" for="uploadFoto">📤 Enviar Foto</label>
-      <input id="uploadFoto" type="file" accept="image/*" onchange="uploadParaSupabase(event)">
+      <input id="uploadFoto" type="file" accept="image/*" onchange="uploadParaSupabase(event)" />
       <div id="cronometro-upload" style="display: none; margin-top: 20px; font-weight: bold;"></div>
       <div class="galeria" id="galeria"></div>
     </section>
   </div>
 
+  <!-- Menu Inferior -->
   <div class="menu-inferior">
     <button id="btn-convite" class="ativo" onclick="trocarPagina('convite')">🎉 Convite</button>
     <button id="btn-mural" onclick="trocarPagina('mural')">📸 Mural de Fotos</button>
   </div>
 
   <!-- Modal de Confirmação -->
-  <div id="modal-confirmacao" class="modal-bg" style="display: none;">
+<div id="modal-confirmacao" class="modal-bg" style="display: none;">
     <div class="modal">
       <h3>Confirme sua presença</h3>
+  
       <label for="nomeConfirmacao">Nome:</label>
-      <input type="text" id="nomeConfirmacao" placeholder="Seu nome completo">
-
+      <input type="text" id="nomeConfirmacao" placeholder="Seu nome completo" />
+  
       <label for="acompanhantesConfirmacao">Número de acompanhantes:</label>
-      <input type="number" id="acompanhantesConfirmacao" min="0" value="0">
-
+      <div class="quantidade-container">
+        <button type="button" onclick="alterarAcompanhantes(-1)">-</button>
+        <input type="number" id="acompanhantesConfirmacao" min="0" value="0" />
+        <button type="button" onclick="alterarAcompanhantes(1)">+</button>
+      </div>
+  
       <button onclick="enviarConfirmacao()">Confirmar</button>
       <button onclick="fecharModalConfirmacao()">Cancelar</button>
     </div>
   </div>
 
-    <!-- Modal de Imagem Ampliada -->
-    <div id="modal-imagem" class="modal-bg" style="display: none;">
-      <span onclick="fecharImagemAmpliada()" style="position:absolute;top:20px;right:30px;font-size:30px;cursor:pointer;color:#fff">&times;</span>
-      <img id="imagem-ampliada" style="max-width:90%; max-height:80%; border-radius:20px;">
-    </div>
-    
-    <div id="modal-presentes" class="modal-bg" style="display: none;">
-      <div class="modal">
-        <h3>🎁 Sugestões de Presente para o Bernardo</h3>
-        <ul style="text-align: left; padding-left: 20px; margin-top: 15px;">
-          <li>🧸 Brinquedos educativos</li>
-          <li>👕 Tamanho de roupa: 6 anos</li>
-          <li>🧦 Tamanho do calçado: 27</li>
-          <li>⚽ Time do coração: Cruzeiro</li>
-          <li>📚 Livros infantis com bichinhos</li>
-        </ul>
-        <button onclick="fecharModalPresentes()">Fechar</button>
-      </div>
-    </div>
+  <div id="modal-imagem" class="modal-bg" style="display: none;">
+    <span onclick="fecharImagemAmpliada()" style="position:absolute;top:20px;right:30px;font-size:30px;cursor:pointer;color:#fff">&times;</span>
+    <img id="imagem-ampliada" style="max-width:90%; max-height:80%; border-radius:20px;" />
+  </div>
 
-    <footer style="margin-top: 60px; padding: 20px; text-align: center; color: var(--cor-primaria); font-size: 0.9rem;">
-      Feito com ❤️ por <a href="https://wa.me/5511934142143" target="_blank" style="color: var(--cor-secundaria); font-weight: bold; text-decoration: none;">Vitor Domingues</a>
-    </footer>
+  <div id="modal-presentes" class="modal-bg" style="display: none;">
+    <div class="modal">
+      <h3>🎁 Sugestões de Presente para o Bernardo</h3>
+      <ul style="text-align: left; padding-left: 20px; margin-top: 15px;">
+        <li>🧸 Brinquedos educativos</li>
+        <li>👕 Tamanho de roupa: 6 anos</li>
+        <li>🧦 Tamanho do calçado: 27</li>
+        <li>⚽ Time do coração: Cruzeiro</li>
+        <li>📚 Livros infantis com bichinhos</li>
+      </ul>
+      <button onclick="fecharModalPresentes()">Fechar</button>
+    </div>
+  </div>
+
+  <footer style="margin-top: 60px; padding: 20px; text-align: center; color: var(--cor-primaria); font-size: 0.9rem;">
+    Feito com ❤️ por <a href="https://wa.me/5511934142143" target="_blank" style="color: var(--cor-secundaria); font-weight: bold; text-decoration: none;">Vitor Domingues</a>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="script.js"></script>
+  <script src="/novo_codigo/script/script.js"></script>
 </body>
 </html>
