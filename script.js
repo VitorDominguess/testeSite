@@ -1,6 +1,6 @@
 :root {
     /* Fundos */
-    --bg-convite-img: url('/assets/divertidamente.png'); /* Altere esse caminho */
+    --bg-convite-img: url('./assets/divertidamente.png'); /* Altere esse caminho */
 
     /* Fundo do mural */
     --cor-fundo-mural: #fff9f4; /* Um tom claro para destacar as fotos */
