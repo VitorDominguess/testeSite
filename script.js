@@ -1,237 +1,335 @@
-// script.js
+:root {
+    /* Fundos */
+    --bg-convite-img: url('/assets/divertidamente.png'); /* Altere esse caminho */
 
-const SUPABASE_URL = "https://afzabegsczdkurxidqnb.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmemFiZWdzY3pka3VyeGlkcW5iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI4NDg5MTIsImV4cCI6MjA1ODQyNDkxMn0.QSKPxzYd2eUmsab-HFTRzcUQYgHALN3Xht77z4qZPdc";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const PASTA = "bernardo-4-anos"; // pasta deste convite específica
-let paginaAtual = 0;
-const limitePorPagina = 10;
+    /* Fundo do mural */
+    --cor-fundo-mural: #fff9f4; /* Um tom claro para destacar as fotos */
 
-// Configuração da festa
-const dataFesta = new Date("2025-03-24T22:30:00");
-const duracaoHoras = 2;
-const fimFesta = new Date(dataFesta.getTime() + duracaoHoras * 60 * 60 * 1000);
+    /* Cores principais com base nas emoções */
+    --cor-primaria: #FFD93D;     /* Alegria */
+    --cor-secundaria: #6C5CE7;   /* Medo */
+    --cor-terciaria: #D72638;    /* Raiva */
 
-function trocarPagina(pagina) {
-  const convite = document.getElementById('pagina-convite');
-  const mural = document.getElementById('pagina-mural');
-  const btnConvite = document.getElementById('btn-convite');
-  const btnMural = document.getElementById('btn-mural');
+    /* Textos */
+    --cor-texto-principal: #3A6EA5;  /* Tristeza (azul escuro para contraste) */
+    --cor-texto-claro: #ffffff;
 
-  if (pagina === 'convite') {
-    convite.classList.add('ativa');
-    mural.classList.remove('ativa');
-    btnConvite.classList.add('ativo');
-    btnMural.classList.remove('ativo');
-  } else {
-    convite.classList.remove('ativa');
-    mural.classList.add('ativa');
-    btnConvite.classList.remove('ativo');
-    btnMural.classList.add('ativo');
-    paginaAtual = 0;
-    carregarFotosMural();
-    controlarUpload();
-    iniciarContagemRegressiva();
+    /* Botões */
+    --botao-fundo: var(--cor-primaria);
+    --botao-texto: #3A3A3A;
+    --botao-hover: var(--cor-secundaria);
+}
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
+  
+  body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background-color: var(--cor-fundo-mural);
+    color: var(--cor-texto-claro);
+    text-align: center;
+    padding-bottom: 120px;
+  }
+  
+  /* Página de convite com imagem de fundo */
+  #pagina-convite {
+    background-image: var(--bg-convite-img);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  
+  /* Película transparente atrás dos botões */
+  .pelicula-botoes {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 30px 20px 80px 20px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+  
+  /* Botões no terço inferior */
+  .botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  
+  .botoes button {
+    padding: 15px;
+    border: none;
+    border-radius: 30px;
+    background-color: var(--botao-fundo);
+    color: var(--botao-texto);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .botoes button:hover {
+    background-color: var(--botao-hover);
+    color: var(--botao-texto);
+  }
+  
+  /* Página do mural com fundo sólido */
+  #pagina-mural {
+    background-color: var(--cor-fundo-mural);
+    color: var(--cor-texto-principal);
+    min-height: 100vh;
+    padding: 40px 20px 80px 20px;
+  }
+  
+  /* Mural */
+  .mural h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .upload-label {
+    display: inline-block;
+    background-color: var(--botao-fundo);
+    color: var(--botao-texto);
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+  }
+  
+  .upload-label:hover {
+    background-color: var(--botao-hover);
+    color: var(--botao-texto);
+  }
+  
+  input[type="file"] {
+    display: none;
+  }
+  
+  .galeria {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  
+  .galeria img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .galeria img:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Menu inferior */
+  .menu-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--cor-primaria);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 100;
+    height: 60px;
+  }
+  
+  .menu-inferior button {
+    flex: 1;
+    height: 100%;
+    background-color: var(--cor-terciaria);
+    color: var(--cor-primaria);
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    margin: -10px 5px 0 5px;
+    padding: 10px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    top: -10px;
+  }
+  
+  .menu-inferior button.ativo {
+    background-color: var(--cor-secundaria);
+    color: var(--cor-texto-principal);
+    z-index: 101;
+  }
+  
+  /* Modais */
+  .modal-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .modal {
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-principal);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: left;
+  }
+  
+  .modal h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .modal label {
+    font-weight: bold;
+    margin: 10px 0 5px;
+    display: block;
+  }
+  
+  .modal input[type="text"],
+  .modal input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: none;
+  }
+  
+  .modal button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-top: 10px;
+    cursor: pointer;
+    background-color: var(--cor-terciaria);
+    color: var(--cor-primaria);
+    transition: background-color 0.3s;
+  }
+  
+  .modal button:hover {
+    background-color: var(--botao-hover);
+    color: var(--botao-texto);
+  }
+  
+  /* Modal de imagem ampliada */
+  #modal-imagem.modal-bg {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  #modal-imagem img {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease;
+  }
+  
+  #modal-imagem span {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    z-index: 1001;
+    font-weight: bold;
+  }
+  
+  /* Animação */
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pagina {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    display: none;
+    animation: fade 0.4s ease;
+    z-index: 0;
+  }
+  
+  .pagina.ativa {
+    display: block;
+    z-index: 1;
+  }
+
+  .modal input[type="text"],
+.modal input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+  font-size: 1rem;
 }
 
-function abrirMapa() {
-  const endereco = encodeURIComponent("Salão Festa e Cia, Rua Lorca, 10, União");
-  window.open(`https://www.google.com/maps/search/?api=1&query=${endereco}`, '_blank');
-}
-
-function abrirModalConfirmacao() {
-  document.getElementById('modal-confirmacao').style.display = 'flex';
-}
-
-function fecharModalConfirmacao() {
-  document.getElementById('modal-confirmacao').style.display = 'none';
-}
-
-function verPresentes() {
-  alert('Lista de presentes será implementada.');
-}
-
-function enviarConfirmacao() {
-  const nome = document.getElementById('nomeConfirmacao').value.trim();
-  const acompanhantes = parseInt(document.getElementById('acompanhantesConfirmacao').value);
-
-  if (!nome) {
-    alert('Por favor, preencha seu nome.');
-    return;
+.quantidade-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
   }
-
-  fetch(`${SUPABASE_URL}/rest/v1/confirmados`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Prefer': 'return=minimal'
-    },
-    body: JSON.stringify({ nome, acompanhantes })
-  })
-  .then(res => {
-    if (res.ok) {
-      alert("Presença confirmada com sucesso! 🎉");
-      fecharModalConfirmacao();
-      document.getElementById('nomeConfirmacao').value = '';
-      document.getElementById('acompanhantesConfirmacao').value = 0;
-    } else {
-      alert("Erro ao confirmar presença. Tente novamente.");
-    }
-  });
-}
-
-function controlarUpload() {
-  const inputUpload = document.getElementById("uploadFoto");
-  const labelUpload = document.querySelector("label[for='uploadFoto']");
-  const cronometro = document.getElementById("cronometro-upload");
-  const agora = new Date();
-
-  if (agora >= dataFesta && agora <= fimFesta) {
-    inputUpload.disabled = false;
-    labelUpload.style.display = "inline-block";
-    if (cronometro) cronometro.style.display = "none";
-  } else {
-    inputUpload.disabled = true;
-    labelUpload.style.display = "none";
-    if (cronometro) cronometro.style.display = "block";
+  
+  .quantidade-container button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--cor-secundaria);
+    color: var(--cor-texto-principal);
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
   }
-}
-
-function iniciarContagemRegressiva() {
-  const cronometro = document.getElementById("cronometro-upload");
-  if (!cronometro) return;
-
-  function atualizarContagem() {
-    const agora = new Date();
-    const diff = dataFesta - agora;
-
-    if (diff <= 0) {
-      cronometro.style.display = "none";
-      controlarUpload();
-      return;
-    }
-
-    const horas = Math.floor(diff / (1000 * 60 * 60));
-    const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const segundos = Math.floor((diff % (1000 * 60)) / 1000);
-
-    cronometro.innerHTML = `🚨 Atenção patrulheiros! O envio de fotos será liberado em <strong>${horas}h ${minutos}m ${segundos}s</strong>!`; 
+  
+  .quantidade-container button:hover {
+    background-color: var(--cor-terciaria);
+    color: var(--cor-primaria);
   }
-
-  atualizarContagem();
-  setInterval(atualizarContagem, 1000);
-}
-
-async function uploadParaSupabase(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const fileName = `${Date.now()}-${file.name}`;
-  const path = `${PASTA}/${fileName}`;
-
-  const { data, error } = await supabase.storage
-    .from("mural")
-    .upload(path, file, {
-      cacheControl: "3600",
-      upsert: false,
-      contentType: file.type
-    });
-
-  if (error) {
-    console.error("Erro do Supabase:", error);
-    alert("Erro ao enviar a imagem.");
-    return;
+  
+  .quantidade-container input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    border: 2px solid #ccc;
+    border-radius: 10px;
   }
+  
 
-  const imageUrl = `${SUPABASE_URL}/storage/v1/object/public/mural/${path}`;
-  const img = document.createElement("img");
-  img.src = imageUrl;
-  img.alt = "Foto enviada";
-  img.addEventListener('click', () => abrirImagemAmpliada(imageUrl));
-  document.getElementById("galeria").appendChild(img);
-}
-
-function abrirImagemAmpliada(url) {
-  const modal = document.getElementById("modal-imagem");
-  const imagem = document.getElementById("imagem-ampliada");
-  if (imagem && modal) {
-    imagem.src = url;
-    modal.style.display = "flex";
-  }
-}
-
-function fecharImagemAmpliada() {
-  const modal = document.getElementById("modal-imagem");
-  const imagem = document.getElementById("imagem-ampliada");
-  if (modal && imagem) {
-    modal.style.display = "none";
-    imagem.src = "";
-  }
-}
-
-document.getElementById('galeria').addEventListener('click', function (e) {
-  if (e.target.tagName === 'IMG') {
-    abrirImagemAmpliada(e.target.src);
-  }
-});
-
-async function carregarFotosMural() {
-  const galeria = document.getElementById("galeria");
-  galeria.innerHTML = "";
-
-  const { data, error } = await supabase.storage.from("mural").list(PASTA, {
-    limit: 1000,
-    offset: 0,
-    sortBy: { column: "name", order: "asc" }
-  });
-
-  if (error) {
-    console.error("Erro ao listar imagens:", error);
-    return;
-  }
-
-  const inicio = paginaAtual * limitePorPagina;
-  const fim = inicio + limitePorPagina;
-  const imagensPaginadas = data.slice(inicio, fim);
-
-  imagensPaginadas.forEach(file => {
-    const imageUrl = `${SUPABASE_URL}/storage/v1/object/public/mural/${PASTA}/${file.name}`;
-    const img = document.createElement("img");
-    img.src = imageUrl;
-    img.alt = file.name;
-    img.addEventListener('click', () => abrirImagemAmpliada(imageUrl));
-    galeria.appendChild(img);
-  });
-
-  if (fim < data.length) {
-    const btnMais = document.createElement("button");
-    btnMais.textContent = "🔄 Carregar mais fotos";
-    btnMais.classList.add("btn-carregar-mais");
-    btnMais.style.margin = "20px auto";
-    btnMais.style.padding = "12px 24px";
-    btnMais.style.border = "none";
-    btnMais.style.borderRadius = "30px";
-    btnMais.style.backgroundColor = "var(--cor-primaria)";
-    btnMais.style.color = "var(--cor-fundo)";
-    btnMais.style.fontWeight = "bold";
-    btnMais.style.cursor = "pointer";
-    btnMais.style.transition = "background-color 0.3s";
-    btnMais.addEventListener("mouseenter", () => btnMais.style.backgroundColor = "var(--cor-secundaria)");
-    btnMais.addEventListener("mouseleave", () => btnMais.style.backgroundColor = "var(--cor-primaria)");
-    btnMais.onclick = () => {
-      paginaAtual++;
-      carregarFotosMural();
-    };
-    galeria.appendChild(btnMais);
-  }
-}
-
-function verPresentes() {
-    document.getElementById('modal-presentes').style.display = 'flex';
-  }
-  function fecharModalPresentes() {
-    document.getElementById('modal-presentes').style.display = 'none';
-  }
+  
+  
